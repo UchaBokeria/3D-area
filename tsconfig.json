@@ -1,0 +1,29 @@
+{
+    // "extends": "@tsconfig/svelte/tsconfig.json",
+    "compilerOptions": {
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        // "resolveJsonModule": true,
+        "allowJs": true,
+        "checkJs": true,
+        "isolatedModules": true,
+        "paths": {
+            "@app/*": ["./src/app/*"],
+            "@shared/*": ["./src/shared/*"],
+            "@assets/*": ["./src/assets/*"],
+            "@/*": ["../node_modules/*"],
+            "~": ["./"]
+        }
+    },
+    "include": [
+        "src/**/*.d.ts",
+        "src/**/*.ts",
+        "src/**/*.js",
+        "src/**/*.svelte",
+        "public/vite-env.d.ts",
+        "vite-env.d.ts"
+    ],
+    "exclude": ["src/**/*demo.js"]
+    // "references": [{ "path": "./tsconfig.node.json" }]
+}
