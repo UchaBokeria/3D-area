@@ -3,7 +3,7 @@ import { simulate } from '@shared/simulate'
 import { FirstPersonControls, GLTF } from 'three/examples/jsm/Addons'
 
 export class room extends simulate {
-    controls
+    controls: FirstPersonControls
     constructor() {
         super()
 
@@ -11,8 +11,15 @@ export class room extends simulate {
         // this.camera.position.z = 10
 
         this.controls = new FirstPersonControls(this.camera, this.render.domElement)
-        this.controls.movementSpeed = 150
+        this.controls.movementSpeed = 1
         this.controls.lookSpeed = 0.1
+        // this.controls.activeLook = false
+        // this.controls.autoForward = true
+        // this.controls.constrainVertical = true
+        this.controls.lookSpeed = 0.08
+        this.controls.movementSpeed = 0.8
+        // this.controls.object
+        // this.controls.dispose()
 
         const AmbientLight = new THREE.AmbientLight(0x333333, 5)
         this.scene.add(AmbientLight)
@@ -36,5 +43,7 @@ export class room extends simulate {
             // this.objects.eye.rotation.y = -3 + (this.mouseX / window.innerWidth) * 3
             // this.objects.eye.rotation.x = -1.2 + (this.mouseY * 2.5) / window.innerHeight
         }
+
+        this.resize = () => this.controls.handleResize
     }
 }

@@ -10,6 +10,7 @@
         "isolatedModules": true,
         "paths": {
             "@app/*": ["./src/app/*"],
+            "@common/*": ["./src/common/*"],
             "@shared/*": ["./src/shared/*"],
             "@assets/*": ["./src/assets/*"],
             "@/*": ["../node_modules/*"],

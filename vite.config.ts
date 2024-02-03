@@ -1,16 +1,18 @@
 import copy from 'rollup-plugin-copy'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import EnvironmentPlugin from 'vite-plugin-environment'
 
 export default defineConfig({
     base: './',
-    plugins: [],
+    plugins: [EnvironmentPlugin('all', { prefix: '' })],
     assetsInclude: ['**/*.gltf'],
     resolve: {
         alias: {
             '~': fileURLToPath(new URL('./', import.meta.url)),
             '@': fileURLToPath(new URL('./node_modules/', import.meta.url)),
             '@app': fileURLToPath(new URL('./src/app/', import.meta.url)),
+            '@common': fileURLToPath(new URL('./src/common/', import.meta.url)),
             '@shared': fileURLToPath(new URL('./src/shared/', import.meta.url)),
             '@assets': fileURLToPath(new URL('./src/assets/', import.meta.url))
         },

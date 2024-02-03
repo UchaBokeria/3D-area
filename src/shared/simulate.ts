@@ -21,7 +21,7 @@ export class simulate {
         this.conf = {
             loop: null,
             axesHelper: false,
-            container: document.querySelector<HTMLDivElement>('#container3D'),
+            container: document.querySelector<HTMLDivElement>('#app'),
             scene: new THREE.Scene(),
             loader: new GLTFLoader(),
             camera: new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
