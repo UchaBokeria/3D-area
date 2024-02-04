@@ -39,8 +39,7 @@ export class room extends simulate {
         this.mapping()
         this.listeners()
 
-        //collision/collision-world.glb
-        this.loader.load('room/scene.gltf', (gltf: any) => {
+        this.loader.load('collision/collision-world.glb', (gltf: any) => {
             this.scene.add(gltf.scene)
             this.worldOctree.fromGraphNode(gltf.scene)
 

@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { ImprovedNoise } from 'three/examples/jsm/Addons'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class simulate {
@@ -10,7 +9,7 @@ export class simulate {
     scene: null | THREE.Scene
     loader: null | THREE.Loader
     camera: null | THREE.PerspectiveCamera
-    render: null | THREE.Renderer
+    render: null | THREE.WebGLRenderer
     mouseX: null | any
     mouseY: null | any
     objects: null | [] | any
@@ -18,14 +17,19 @@ export class simulate {
     clock: THREE.Clock
 
     constructor(_conf = null) {
+        this.container = document.createElement('div')
+        this.container.id = 'VrAreaContainer'
+        document.querySelector<HTMLDivElement>('#app').appendChild(this.container)
+
         this.conf = {
             loop: null,
             axesHelper: false,
-            container: document.querySelector<HTMLDivElement>('#app'),
+            container: this.container,
             scene: new THREE.Scene(),
             loader: new GLTFLoader(),
             camera: new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000),
-            render: new THREE.WebGLRenderer({ alpha: true }),
+            render: { alpha: true },
+            presets: null,
             mouseX: window.innerWidth / 2,
             mouseY: window.innerHeight / 2,
             objects: null,
@@ -34,18 +38,22 @@ export class simulate {
         }
 
         if (_conf) this.conf = { ...this.conf, ..._conf }
+
         this.loop = this.conf?.loop
         this.axesHelper = this.conf?.axesHelper
         this.container = this.conf?.container
         this.scene = this.conf?.scene
         this.loader = this.conf?.loader
         this.camera = this.conf?.camera
-        this.render = this.conf?.render
+        this.render = new THREE.WebGLRenderer(this.conf?.render)
         this.mouseX = null
         this.mouseY = null
         this.resize = null
         this.objects = {}
         this.clock = new THREE.Clock()
+
+        // set loader pre path
+        this.loader.setPath('./src/assets/models/')
 
         // mouse state update
         document.onmousemove = e => {
@@ -62,7 +70,9 @@ export class simulate {
         })
 
         // render to dom
+        this.render.setPixelRatio(window.devicePixelRatio)
         this.render.setSize(window.innerWidth, window.innerHeight)
+        this.conf?.presets && this.conf?.presets(this)
         this.container.appendChild(this.render.domElement)
 
         // loop frames
@@ -82,31 +92,4 @@ export class simulate {
     }
 
     listen: any = (event: keyof WindowEventMap, cb: any) => window.addEventListener(event, cb)
-
-    generateHeight: any = (width: number, height: number) => {
-        let seed = Math.PI / 4
-        window.Math.random = function () {
-            const x = Math.sin(seed++) * 10000
-            return x - Math.floor(x)
-        }
-
-        const size = width * height,
-            data = new Uint8Array(size)
-        const perlin = new ImprovedNoise(),
-            z = Math.random() * 100
-
-        let quality = 1
-
-        for (let j = 0; j < 4; j++) {
-            for (let i = 0; i < size; i++) {
-                const x = i % width,
-                    y = ~~(i / width)
-                data[i] += Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75)
-            }
-
-            quality *= 5
-        }
-
-        return data
-    }
 }

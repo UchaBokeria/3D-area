@@ -1,39 +1,49 @@
-import { Route } from '../common/types.common'
+import { Router, StartRoute } from './app.router'
+import { Route } from '@common/types.common'
+import { ProjectVersion } from '@common/constants.common'
 
 export class App {
-    start: string
     routes: Route[]
     current: Route
-    version: string
     container: HTMLDivElement
 
     constructor() {
-        this.routes = [
-            { name: 'Eye', module: async () => await import('@app/eye/eye.controller') },
-            { name: 'Room', module: async () => await import('@app/room/room.controller') }
-        ]
-
-        this.start = import.meta.env.VITE_START_POINT
-        this.current = this.routes.find(({ name }) => name == this.start)
-        this.container = document.querySelector('#app')
-
-        this.buildNavigation()
+        this.routes = Router
+        this.current = StartRoute()
+        this.container = document.querySelector<HTMLDivElement>('#app')
+        this.navigation()
+        this.versionize(ProjectVersion)
         this.call(this.current)
     }
 
-    buildNavigation(nav = document.createElement('menu')) {
+    async call(route: Route) {
+        this.current = route
+        this.container.querySelector('canvas')?.remove()
+        new (await this.current.module())[route.name.toLowerCase()]()
+    }
+
+    navigation(nav = document.createElement('menu')) {
         this.routes.forEach(route => {
-            const el = document.createElement('p')
-            el.addEventListener('click', () => this.call(route))
+            const el = document.createElement('b')
+            import.meta.env.VITE_START_POINT == route.name && el.classList.add('active')
+
+            el.addEventListener('click', () => {
+                document.querySelectorAll('menu b').forEach(e => {
+                    e.classList.remove('active')
+                    e.innerHTML == route.name && el.classList.add('active')
+                })
+                this.call(route)
+            })
+
             el.innerHTML = route.name
             nav.appendChild(el)
         })
         this.container.appendChild(nav)
     }
 
-    async call(route: Route) {
-        this.current = route
-        this.container.innerHTML = ''
-        new (await this.current.module())[route.name.toLowerCase()]()
+    versionize(version = ProjectVersion, el = document.createElement('div')) {
+        el.innerHTML = `V${version}`
+        el.classList.add('versionizing')
+        this.container.appendChild(el)
     }
 }

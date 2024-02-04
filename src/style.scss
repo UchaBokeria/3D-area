@@ -4,24 +4,55 @@ body {
     background-color: #000;
 
     menu {
-        margin-top: 3em;
+        margin: 0;
+        height: 5vh;
+        background: #eee;
+        box-sizing: border-box;
+        padding: 0 1vw;
         text-align: center;
-        color: white;
-        position: relative;
+        position: absolute;
+        left: 5vw;
         z-index: 99999999;
-        h1 {
-            font-size: 2em;
-            font-weight: 900;
-        }
-
-        p {
+        display: flex;
+        gap: 0 1vw;        
+        display: flex;
+        align-items: center;
+        justify-self: flex-start;
+        opacity: 0.6;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        b {
             cursor: pointer;
+            font-size: 1vw;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
+        b.active { color: blueviolet }
+        top:5vh;
     }
 
-    #container3D canvas {
+    .versionizing {
+        top:5vh;
+        opacity: 0.6;
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-self: flex-start;
+        padding: 0 1vw;
+        font-size: 1vw;
+        height: 5vh;
+        position: absolute;
+        z-index: 99999999;
+        left:0;
+        width: 3vw;
+        background: #eee;
+        // color: blueviolet 
+    }
+
+    #VrAreaContainer {
+        z-index: 10001;
         width: 100vw !important;
         height: 100vh !important;
+        z-index: 1;
         position: absolute;
         top: 0;
         left: 0;

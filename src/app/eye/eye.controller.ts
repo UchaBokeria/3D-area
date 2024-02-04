@@ -19,7 +19,7 @@ export class eye extends simulate {
         this.scene.add(topLight)
 
         // load model
-        this.loader.load(`./src/assets/models/eye/scene.gltf`, (gltf: GLTF) => {
+        this.loader.load(`eye/scene.gltf`, (gltf: GLTF) => {
             this.objects.eye = gltf.scene
             this.scene.add(this.objects.eye)
         })
