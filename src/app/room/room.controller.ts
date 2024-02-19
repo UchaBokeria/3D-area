@@ -30,8 +30,9 @@ export class room extends simulate {
     gui: GUI
     stats: Stats
     worldOctree: Octree
+    opts: any
 
-    constructor() {
+    constructor(opts: any) {
         super({ render: { antialias: true } })
 
         this.init()
@@ -40,19 +41,28 @@ export class room extends simulate {
         this.listeners()
 
         //collision/collision-world.glb
-        this.loader.load('room/scene.gltf', (gltf: any) => {
-            this.scene.add(gltf.scene)
-            this.worldOctree.fromGraphNode(gltf.scene)
+        this.loader.load(
+            opts?.load || 'room/scene.gltf',
+            (gltf: any) => {
+                this.scene.add(gltf.scene)
+                this.worldOctree.fromGraphNode(gltf.scene)
+                console.log('has loaded')
 
-            gltf.scene.traverse((child: { isMesh: any; castShadow: boolean; receiveShadow: boolean; material: { map: { anisotropy: number } } }) => {
-                if (!child.isMesh) return
-                child.castShadow = true
-                child.receiveShadow = true
-                if (child.material.map) child.material.map.anisotropy = 4
-            })
+                gltf.scene.traverse(
+                    (child: { isMesh: any; castShadow: boolean; receiveShadow: boolean; material: { map: { anisotropy: number } } }) => {
+                        if (!child.isMesh) return
+                        child.castShadow = true
+                        child.receiveShadow = true
+                        if (child.material.map) child.material.map.anisotropy = 4
+                    }
+                )
 
-            this.helpers()
-        })
+                this.helpers()
+            },
+            (e: any) => {
+                console.log(e)
+            }
+        )
 
         this.loop = () => {
             this.stats && this.stats.update()
@@ -233,9 +243,7 @@ export class room extends simulate {
             if (result) {
                 sphere.velocity.addScaledVector(result.normal, -result.normal.dot(sphere.velocity) * 1.5)
                 sphere.collider.center.add(result.normal.multiplyScalar(result.depth))
-            } else {
-                sphere.velocity.y -= this.GRAVITY * deltaTime
-            }
+            } else sphere.velocity.y -= this.GRAVITY * deltaTime
 
             const damping = Math.exp(-1.5 * deltaTime) - 1
             sphere.velocity.addScaledVector(sphere.velocity, damping)
@@ -243,10 +251,7 @@ export class room extends simulate {
         })
 
         this.spheresCollisions()
-
-        for (const sphere of this.spheres) {
-            sphere.mesh.position.copy(sphere.collider.center)
-        }
+        for (const sphere of this.spheres) sphere.mesh.position.copy(sphere.collider.center)
     }
 
     getForwardVector() {

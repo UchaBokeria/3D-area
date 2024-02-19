@@ -19,7 +19,7 @@ export class App {
     async call(route: Route) {
         this.current = route
         this.container.querySelector('canvas')?.remove()
-        new (await this.current.module())[route.name.toLowerCase()]()
+        new (await this.current.module())[route.path.toLowerCase()](route?.config)
     }
 
     navigation(nav = document.createElement('menu')) {
